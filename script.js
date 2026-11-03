@@ -60,11 +60,26 @@ const actionButtons = [...document.querySelectorAll('button')];
 actionButtons.filter(b => /Explorar o laboratório|Vamos conhecer o laboratório|Iniciar visita/.test(b.textContent)).forEach(b => b.addEventListener('click', () => visit('visita')));
 actionButtons.filter(b => b.textContent.trim().startsWith('Voltar ao início')).forEach(b => b.addEventListener('click', () => visit('inicio')));
 
+const equipmentDialog = document.querySelector('.equipment-dialog');
+const equipmentDialogCategory = equipmentDialog?.querySelector('.equipment-dialog__category');
+const equipmentDialogTitle = equipmentDialog?.querySelector('#equipment-dialog-title');
+const equipmentDialogDescription = equipmentDialog?.querySelector('.equipment-dialog__description');
 document.querySelectorAll('.equipment-card').forEach(card => card.addEventListener('click', () => {
-  const name = card.querySelector('.equipment-card__body b')?.textContent || 'este equipamento';
-  active = 'tecnologias'; openGuide();
-  setGuideMessage(`Você selecionou ${name}. As informações específicas aparecerão aqui assim que os dados reais forem validados.`);
+  const body = card.querySelector('.equipment-card__body');
+  const category = body?.querySelector('small')?.textContent.trim();
+  const name = body?.querySelector('b')?.textContent.trim();
+  const description = body?.querySelector(':scope > span')?.textContent.trim();
+  if (!equipmentDialog || !equipmentDialogCategory || !equipmentDialogTitle || !equipmentDialogDescription || !category || !name || !description) return;
+
+  equipmentDialogCategory.textContent = category;
+  equipmentDialogTitle.textContent = name;
+  equipmentDialogDescription.textContent = description;
+  equipmentDialog.showModal();
+  active = 'tecnologias';
+  openGuide();
+  setGuideMessage(`Confira as informações de ${name} nesta janela.`);
 }));
+equipmentDialog?.querySelector('.equipment-dialog__close')?.addEventListener('click', () => equipmentDialog.close());
 
 const guideClose = guide.querySelector('.guide__close');
 guideClose?.addEventListener('click', () => {
