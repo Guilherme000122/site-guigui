@@ -2,24 +2,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-   <meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual de 360 graus.">
   <title>Visita 360° — Lab 4.0 SENAI</title>
 
+  <!-- Framework A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
+  <!-- Componente de sincronização da câmera do olho direito -->
   <script>
     AFRAME.registerComponent('sync-camera', {
       schema: {
         source: { type: 'selector' }
       },
-
       tick: function () {
         const sourceCamera = this.data.source;
-
         if (!sourceCamera) return;
-
         this.el.object3D.quaternion.copy(
           sourceCamera.object3D.quaternion
         );
@@ -42,30 +41,32 @@
       font-family: Arial, sans-serif;
     }
 
+    /* Força os blocos a ficarem lado a lado (Split-screen) */
     #stereo-view {
       display: flex;
-      width: 100%;
-      height: 100%;
+      flex-direction: row; 
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
     }
 
+    /* Computador e Telas Grandes: Exibe apenas a cena esquerda de forma cheia */
     #scene-esquerda,
     #scene-direita {
       position: relative;
       margin: 0;
       padding: 0;
-      height: 100%;
+      height: 100vh !important;
     }
 
-    /* Computer: one panoramic view */
     #scene-esquerda {
       display: block;
-      width: 100%;
-      flex: 0 0 100%;
+      width: 100vw !important;
+      flex: 0 0 100vw;
     }
 
     #scene-direita {
-      display: none;
+      display: none !important;
     }
 
     /* Top controls */
@@ -110,11 +111,10 @@
       text-align: center;
     }
 
-    /* Mobile: two equal panoramic views */
-    @media screen and (max-width: 768px) {
+    /* Dispositivos móveis na horizontal (Landscape): Divide a tela estritamente ao meio */
+    @media screen and (max-width: 920px) and (orientation: landscape) {
       html, body {
         width: 100%;
-        height: 100%;
         height: 100dvh;
       }
 
@@ -122,7 +122,6 @@
         display: flex;
         flex-direction: row;
         width: 100vw;
-        height: 100%;
         height: 100dvh;
       }
 
@@ -133,7 +132,7 @@
         width: 50vw !important;
         min-width: 50vw !important;
         max-width: 50vw !important;
-        height: 100% !important;
+        height: 100dvh !important;
         flex: 0 0 50vw !important;
       }
 
@@ -163,7 +162,7 @@
 <body>
 
   <nav class="viewer-tools" aria-label="Virtual tour controls">
-    <a href="index.html #visita">← Voltar ao Lab 4.0</a>
+    <a href="index.html#visita">← Voltar ao Lab 4.0</a>
     <span>Arraste ou movimente o celular para olhar ao redor</span>
   </nav>
 
@@ -171,7 +170,7 @@
     Coloque o celular nos óculos VR para explorar o laboratório.
   </div>
 
-  <mai id="stereo-view">
+  <main id="stereo-view">
 
     <!-- LEFT EYE -->
     <a-scene
@@ -190,12 +189,7 @@
         rotation="0 -90 0">
       </a-sky>
 
-      <a-entity
-        id="camera-esquerda"
-        camera
-        position="0 1.6 0"
-        look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true"
-      ></a-entity>
+      
     </a-scene>
 
     <!-- RIGHT EYE -->
@@ -214,44 +208,10 @@
         rotation="0 -90 0">
       </a-sky>
 
-      <a-entity
-        camera
-        position="0 1.6 0"
-        sync-camera="source: #camera-esquerda"
-      ></a-entity>
+      
     </a-scene>
 
-  </mai
-  <!-- Menu de Controles (Sempre visível em modo 2D/Mobile) -->
-  <nav class="viewer-tools" aria-label="Virtual tour controls">
-    <a href="index.html#visita">← Voltar ao Lab 4.0</a>
-    <span>Arraste ou movimente o celular para olhar ao redor</span>
-  </nav>
-
-  <!-- 
-    CENA ÚNICA DO A-FRAME: 
-    - vr-mode-ui="enabled: true": Ativa o botão nativo do óculos VR no canto inferior direito.
-    - webxr="requiredFeatures: local-floor": Garante a compatibilidade nativa com os browsers de óculos VR.
-  -->
-  <a-scene 
-    embedded 
-    vr-mode-ui="enabled: true" 
-    device-orientation-permission-ui="enabled: true" 
-    renderer="colorManagement: true"
-    webxr="requiredFeatures: local-floor">
-    
-    <a-assets>
-      <img id="panorama" src="panorama.jpeg">
-    </a-assets>
-
-    <!-- O panorama 360° -->
-    <a-sky src="#panorama" rotation="0 -90 0"></a-sky>
-
-    <!-- Câmera com controles automáticos para Desktop, Mobile (Giroscópio) e Óculos VR -->
-    
-    
-  </a-scene>
-
+  </main>
 
 </body>
 </html>
