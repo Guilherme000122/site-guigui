@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual de 360 graus.">
   <title>Visita 360° — Lab 4.0 SENAI</title>
@@ -163,7 +163,7 @@
 <body>
 
   <nav class="viewer-tools" aria-label="Virtual tour controls">
-    <a href="index.html#visita">← Voltar ao Lab 4.0</a>
+    <a href="index.html #visita">← Voltar ao Lab 4.0</a>
     <span>Arraste ou movimente o celular para olhar ao redor</span>
   </nav>
 
@@ -171,7 +171,7 @@
     Coloque o celular nos óculos VR para explorar o laboratório.
   </div>
 
-  <main id="stereo-view">
+  <mai id="stereo-view">
 
     <!-- LEFT EYE -->
     <a-scene
@@ -221,7 +221,37 @@
       ></a-entity>
     </a-scene>
 
-  </main>
+  </mai
+  <!-- Menu de Controles (Sempre visível em modo 2D/Mobile) -->
+  <nav class="viewer-tools" aria-label="Virtual tour controls">
+    <a href="index.html#visita">← Voltar ao Lab 4.0</a>
+    <span>Arraste ou movimente o celular para olhar ao redor</span>
+  </nav>
+
+  <!-- 
+    CENA ÚNICA DO A-FRAME: 
+    - vr-mode-ui="enabled: true": Ativa o botão nativo do óculos VR no canto inferior direito.
+    - webxr="requiredFeatures: local-floor": Garante a compatibilidade nativa com os browsers de óculos VR.
+  -->
+  <a-scene 
+    embedded 
+    vr-mode-ui="enabled: true" 
+    device-orientation-permission-ui="enabled: true" 
+    renderer="colorManagement: true"
+    webxr="requiredFeatures: local-floor">
+    
+    <a-assets>
+      <img id="panorama" src="panorama.jpeg">
+    </a-assets>
+
+    <!-- O panorama 360° -->
+    <a-sky src="#panorama" rotation="0 -90 0"></a-sky>
+
+    <!-- Câmera com controles automáticos para Desktop, Mobile (Giroscópio) e Óculos VR -->
+    
+    
+  </a-scene>
+
 
 </body>
 </html>
