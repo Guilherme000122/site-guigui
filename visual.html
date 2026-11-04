@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual de 360 graus.">
   <title>Visita 360° — Lab 4.0 SENAI</title>
+  <script src="https://static.kuula.io/api.js"></script>
 
   <style>
     * {
@@ -23,19 +24,26 @@
 
     /* Estrutura base para Computadores */
     #stereo-view {
-      position: fixed;
-      inset: 0;
+      display: flex;
+      flex-direction: row;
       width: 100vw;
       height: 100vh;
       overflow: hidden;
     }
 
-    #scene-panorama {
-      position: absolute;
-      inset: 0;
+    #scene-esquerda,
+    #scene-direita {
+      position: relative;
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
       margin: 0;
       padding: 0;
       overflow: hidden;
+    }
+
+    #scene-direita {
+      display: none;
     }
 
     .kuula-frame {
@@ -95,6 +103,13 @@
         height: 100dvh;
       }
 
+      #scene-esquerda,
+      #scene-direita {
+        display: block;
+        flex: 0 0 50%;
+        width: 50%;
+      }
+
       .viewer-tools {
         top: 12px;
         left: 12px;
@@ -128,20 +143,32 @@
   </nav>
 
   <div class="vr-instructions">
-    No celular, toque no botão VR do Kuula para ativar a visão dividida e o movimento da cabeça.
+    Coloque o celular na horizontal e toque no botão VR do Kuula para usar o movimento da cabeça.
   </div>
 
   <main id="stereo-view">
-    <section id="scene-panorama">
-      <iframe
-        class="kuula-frame"
-        src="https://kuula.co/share/LCHdQ/collection/7dcCJ?logo=1&amp;info=1&amp;fs=1&amp;vr=1&amp;thumbs=1"
-        title="Visita virtual 360° do Lab 4.0"
-        allow="gyroscope; accelerometer; magnetometer; xr-spatial-tracking"
-        allowfullscreen>
-      </iframe>
+    <section id="scene-esquerda">
+      <script
+        data-kuula="https://kuula.co/share/LCHdQ/collection/7dcCJ?logo=1&amp;info=1&amp;fs=1&amp;vr=1&amp;thumbs=1&amp;priority=1"
+        data-width="100%"
+        data-height="100%"
+        data-css="kuula-frame">
+      </script>
+    </section>
+    <section id="scene-direita">
+      <script
+        data-kuula="https://kuula.co/share/LCHdQ/collection/7dcCJ?logo=1&amp;info=1&amp;fs=1&amp;vr=1&amp;thumbs=1&amp;priority=1"
+        data-width="100%"
+        data-height="100%"
+        data-css="kuula-frame">
+      </script>
     </section>
   </main>
+
+  <script src="https://static.kuula.io/embed.js"></script>
+  <script>
+    KuulaPlayerAPI.synchronizePlayers(true);
+  </script>
 
 </body>
 </html>
