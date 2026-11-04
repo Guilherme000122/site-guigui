@@ -135,7 +135,7 @@ img { max-width: 100%; }
 .viewer-heading h2 strong { color: #58b1e6; }
 .panorama-shell { width: min(1420px, calc(100% - 32px)); margin: auto; }
 .panorama { height: min(62vw, 650px); min-height: 450px; background: #102d43; position: relative; overflow: hidden; user-select: none; border: 1px solid #26465c; }
-.panorama__preview { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: flex-end; padding: 24px; background: linear-gradient(rgba(5,24,40,.28),rgba(5,24,40,.48)),url("panorama.jpeg") center / cover no-repeat; text-decoration: none; }
+.panorama__preview { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: flex-end; padding: 24px; background: linear-gradient(rgba(5,24,40,.28),rgba(5,24,40,.48)),url("image.png") center / cover no-repeat; text-decoration: none; }
 .panorama__preview:hover .panorama__open { background: #ff9a3e; transform: translateY(-2px); }
 .panorama__open { padding: 15px 20px; color: #102b43; background: #f58220; border-radius: 999px; font-size: 13px; font-weight: 800; transition: .2s ease; }
 .panorama__top { position: absolute; z-index: 1; top: 24px; left: 26px; right: 230px; display: flex; justify-content: space-between; font-size: 9px; font-weight: 700; letter-spacing: .13em; pointer-events: none; }
