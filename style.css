@@ -216,8 +216,79 @@ footer { background: #002d55; color: white; }
   .viewer-bia { left: 12px; right: 12px; bottom: 78px; }.viewer-bia > .bia { width: 95px; height: 148px; margin-right: -5px; }.viewer-bia__bubble { width: auto; flex: 1; min-height: 0; padding: 9px 10px; }.viewer-bia__bubble p { margin: 5px 18px 6px 0; font-size: 8px; line-height: 1.35; }
   .gallery { grid-template-columns: 1fr; grid-template-rows: 280px 180px 180px; }.gallery__large { grid-row: auto; }
   .cta .container { align-items: flex-start; flex-direction: column; gap: 25px; }.footer-main { align-items: flex-start; flex-direction: column; gap: 23px; padding: 45px 0; }.footer-main p { flex: 0; }
-  .guide { right: 12px; bottom: 12px; left: 12px; }.guide > .bia { position: absolute; left: 7px; top: -132px; width: 96px; height: 148px; }.guide__bubble { width: min(100%, 280px); min-height: 0; max-height: 190px; margin-left: auto; padding: 14px 16px; overflow: auto; }.guide__restore { margin-left: auto; }
+  
+/* BIA E BALÃO - CELULAR */
+.guide {
+  position: fixed;
+  z-index: 60;
+  right: 10px;
+  bottom: 12px;
+  left: 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 0;
+  pointer-events: none;
+}
+
+.guide > .bia {
+  position: relative;
+  flex: 0 0 90px;
+  width: 90px;
+  height: 138px;
+  left: auto;
+  top: auto;
+  margin: 0 -5px 0 0;
+  z-index: 2;
+}
+
+.guide__bubble {
+  position: relative;
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  max-width: 280px;
+  max-height: 180px;
+  margin: 0;
+  padding: 12px 14px;
+  overflow-y: auto;
+  border-radius: 18px 18px 18px 6px;
+}
+
+.guide__bubble p {
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.guide__restore {
+  margin-left: auto;
+}
+
   .footer-bottom { line-height: 1.6; }
 }
 
 @media (prefers-reduced-motion: reduce) { :root { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+
+@media (max-width: 380px) {
+  .guide {
+    right: 6px;
+    left: 6px;
+    bottom: 8px;
+  }
+
+  .guide > .bia {
+    flex-basis: 76px;
+    width: 76px;
+    height: 118px;
+    margin-right: -3px;
+  }
+
+  .guide__bubble {
+    padding: 10px;
+    max-height: 155px;
+  }
+
+  .guide__bubble p {
+    font-size: 9px;
+  }
+}
