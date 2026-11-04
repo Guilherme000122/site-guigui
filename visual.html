@@ -1,83 +1,119 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Explore o Lab 4.0 do SENAI em uma visita virtual interativa de 360 graus."
-    />
-    <title>Visita 360° — Lab 4.0 SENAI</title>
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual interativa de 360 graus.">
+  <title>Visita 360° — Lab 4.0 SENAI</title>
 
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
-      }
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-      a-scene {
-        width: 100%;
-        height: 100%;
-      }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    a-scene {
+      width: 100%;
+      height: 100%;
+    }
+
+    .viewer-tools {
+      position: fixed;
+      z-index: 10;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .viewer-tools a,
+    .viewer-tools span {
+      padding: 11px 14px;
+      color: white;
+      background: rgba(0, 35, 65, 0.88);
+      font-size: 14px;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .viewer-tools a:hover {
+      background: #00579d;
+    }
+
+    .vr-instructions {
+      position: fixed;
+      z-index: 10;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 18px;
+      color: white;
+      background: rgba(0, 35, 65, 0.85);
+      border-radius: 5px;
+      font-size: 13px;
+      text-align: center;
+      width: max-content;
+      max-width: 90%;
+    }
+
+    @media (max-width: 600px) {
       .viewer-tools {
-        position: fixed;
-        z-index: 1;
-        top: 16px;
-        left: 16px;
-        display: flex;
-        align-items: center;
-        gap: 14px;
+        top: 10px;
+        left: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
       }
+    }
+  </style>
+</head>
 
-      .viewer-tools a,
-      .viewer-tools span {
-        padding: 11px 14px;
-        color: #fff;
-        background: rgba(0, 35, 65, 0.82);
-        font-size: 14px;
-        text-decoration: none;
-      }
+<body>
 
-      .viewer-tools a:hover {
-        background: #00579d;
-      }
+  <nav class="viewer-tools" aria-label="Controles da visita virtual">
+    <a href="index.html#visita">← Voltar ao Lab 4.0</a>
+    <span>Arraste ou deslize para olhar ao redor</span>
+  </nav>
 
-      @media (max-width: 600px) {
-        .viewer-tools {
-          top: 10px;
-          left: 10px;
-          right: 10px;
-          align-items: flex-start;
-          flex-direction: column;
-          gap: 8px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <nav class="viewer-tools" aria-label="Controles da visita virtual">
-      <a href="index.html#visita">Voltar ao Lab 4.0</a>
-      <span>Arraste ou deslize para olhar ao redor</span>
-    </nav>
-    <a-scene
-      embedded
-      vr-mode-ui="enabled: true"
-      renderer="colorManagement: true"
+  <div class="vr-instructions">
+    Movimente a cabeça nos óculos VR para explorar o laboratório.
+  </div>
+
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: true; enterVRButton: true"
+    device-orientation-permission-ui="enabled: true"
+    renderer="colorManagement: true"
+  >
+
+    <a-assets>
+      <img id="panorama-lab" src="panorama.jpeg">
+    </a-assets>
+
+    <a-sky
+      src="#panorama-lab"
+      rotation="0 -90 0">
+    </a-sky>
+
+    <a-entity
+      camera
+      position="0 1.6 0"
+      look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true"
     >
-      <a-assets>
-        <img id="panorama-lab" src="panorama.jpeg" alt="" />
-      </a-assets>
-      <a-sky src="#panorama-lab" rotation="0 -90 0"></a-sky>
-      <a-entity camera look-controls position="0 1.6 0"></a-entity>
-    </a-scene>
-  </body>
+    </a-entity>
+
+  </a-scene>
+
+</body>
 </html>
