@@ -284,3 +284,40 @@ footer { background: #002d55; color: white; }
     font-size: 9px;
   }
 }
+/* CORREÇÃO DEFINITIVA DA BIA NO CELULAR */
+@media screen and (max-width: 680px) {
+  .guide {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-end !important;
+    gap: 0 !important;
+  }
+
+  .guide > figure.bia,
+  .guide > .bia.bia--compact {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 105px !important;
+    height: 165px !important;
+    flex: 0 0 105px !important;
+    margin: 0 -10px 0 0 !important;
+    z-index: 2 !important;
+  }
+
+  .guide__bubble {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    z-index: 1 !important;
+  }
+}
