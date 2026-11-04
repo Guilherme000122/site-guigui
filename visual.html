@@ -1,14 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual de 360 graus.">
   <title>Visita 360° — Lab 4.0 SENAI</title>
 
   <!-- Framework A-Frame -->
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://aframe.io"></script>
 
   <!-- Componente de sincronização da câmera do olho direito -->
   <script>
@@ -41,7 +40,7 @@
       font-family: Arial, sans-serif;
     }
 
-    /* Força os blocos a ficarem lado a lado (Split-screen) */
+    /* Estrutura base para Computadores */
     #stereo-view {
       display: flex;
       flex-direction: row; 
@@ -50,7 +49,6 @@
       overflow: hidden;
     }
 
-    /* Computador e Telas Grandes: Exibe apenas a cena esquerda de forma cheia */
     #scene-esquerda,
     #scene-direita {
       position: relative;
@@ -69,7 +67,7 @@
       display: none !important;
     }
 
-    /* Top controls */
+    /* Controles superiores padrão */
     .viewer-tools {
       position: fixed;
       z-index: 100;
@@ -94,7 +92,6 @@
       background: #00579d;
     }
 
-    /* Instructions */
     .vr-instructions {
       position: fixed;
       z-index: 100;
@@ -111,47 +108,57 @@
       text-align: center;
     }
 
-    /* Dispositivos móveis na horizontal (Landscape): Divide a tela estritamente ao meio */
-    @media screen and (max-width: 920px) and (orientation: landscape) {
+    /* ADAPTAÇÃO PARA SMARTPHONES (Força o modo Horizontal Lado a Lado) */
+    @media screen and (max-width: 768px) {
       html, body {
         width: 100%;
         height: 100dvh;
       }
 
+      /* Rotaciona o container principal em 90 graus para alinhar as telas lado a lado no óculos */
       #stereo-view {
         display: flex;
-        flex-direction: row;
-        width: 100vw;
-        height: 100dvh;
+        flex-direction: column; /* Alinha em coluna na tela em pé, que vira lado a lado ao rotacionar */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100dvh !important; /* Inverte Largura por Altura da tela */
+        height: 100vw !important; /* Inverte Altura por Largura da tela */
+        transform: translate(-50%, -50%) rotate(90deg); /* Centraliza e gira a visualização */
+        transform-origin: center center;
       }
 
+      /* Cada olho assume metade do container rotacionado */
       #stereo-view #scene-esquerda,
       #stereo-view #scene-direita {
         display: block !important;
         position: relative;
-        width: 50vw !important;
-        min-width: 50vw !important;
-        max-width: 50vw !important;
-        height: 100dvh !important;
-        flex: 0 0 50vw !important;
+        width: 100% !important;
+        height: 50% !important; /* Divide a altura do container (que virou a largura real após o rotate) */
+        flex: 0 0 50% !important;
       }
 
+      /* Ajusta os menus para também acompanharem a rotação e não sumirem da tela */
       .viewer-tools {
-        top: 8px;
-        left: 8px;
+        top: 20px;
+        left: 20px;
+        transform: rotate(90deg);
+        transform-origin: top left;
         gap: 5px;
       }
 
       .viewer-tools a,
       .viewer-tools span {
-        padding: 7px 9px;
-        font-size: 10px;
+        padding: 8px 10px;
+        font-size: 11px;
       }
 
       .vr-instructions {
-        bottom: 8px;
-        width: 90%;
-        max-width: 90%;
+        bottom: 20px;
+        left: auto;
+        right: 20px;
+        transform: rotate(90deg);
+        transform-origin: bottom right;
         padding: 9px;
         font-size: 11px;
       }
@@ -163,11 +170,11 @@
 
   <nav class="viewer-tools" aria-label="Virtual tour controls">
     <a href="index.html#visita">← Voltar ao Lab 4.0</a>
-    <span>Arraste ou movimente o celular para olhar ao redor</span>
+    <span>Coloque o celular no óculos VR</span>
   </nav>
 
   <div class="vr-instructions">
-    Coloque o celular nos óculos VR para explorar o laboratório.
+    Use os óculos VR para explorar o laboratório.
   </div>
 
   <main id="stereo-view">
