@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -86,8 +87,8 @@
     <span>Arraste ou deslize para olhar ao redor</span>
   </nav>
 
-  <div class="vr-instructions">
-    Movimente a cabeça nos óculos VR para explorar o laboratório.
+  <div class="vr-instructions" id="vr-instructions">
+    Para usar os óculos VR, pressione o botão de realidade virtual.
   </div>
 
   <a-scene
@@ -98,7 +99,7 @@
   >
 
     <a-assets>
-      <img id="panorama-lab" src="panorama.jpeg">
+      <img id="panorama-lab" src="panorama.jpeg" crossorigin="anonymous">
     </a-assets>
 
     <a-sky
@@ -110,10 +111,22 @@
       camera
       position="0 1.6 0"
       look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true"
-    >
-    </a-entity>
+    ></a-entity>
 
   </a-scene>
+
+  <script>
+    const scene = document.querySelector('a-scene');
+    const instructions = document.getElementById('vr-instructions');
+
+    scene.addEventListener('enter-vr', () => {
+      instructions.textContent = 'Modo VR ativado! Explore o laboratório movimentando a cabeça.';
+    });
+
+    scene.addEventListener('exit-vr', () => {
+      instructions.textContent = 'Para usar os óculos VR, pressione o botão de realidade virtual.';
+    });
+  </script>
 
 </body>
 </html>
