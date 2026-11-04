@@ -68,16 +68,19 @@
     }
 
     .viewer-tools a,
-    .viewer-tools span {
+    .viewer-tools button {
       padding: 11px 14px;
+      border: 0;
       color: #fff;
       background: rgba(0, 35, 65, 0.90);
       font-size: 14px;
       text-decoration: none;
       border-radius: 5px;
+      cursor: pointer;
     }
 
-    .viewer-tools a:hover {
+    .viewer-tools a:hover,
+    .viewer-tools button:hover {
       background: #00579d;
     }
 
@@ -97,57 +100,49 @@
       text-align: center;
     }
 
-    /* ADAPTAÇÃO PARA SMARTPHONES (Força o modo Horizontal Lado a Lado) */
-    @media screen and (max-width: 768px) {
+    /* Duas metades no celular, inclusive quando estiver em paisagem */
+    @media screen and (max-width: 1024px), screen and (hover: none) and (pointer: coarse) {
       html, body {
         width: 100%;
         height: 100dvh;
       }
 
-      /* Rotaciona o container principal em 90 graus para alinhar as telas lado a lado no óculos */
       #stereo-view {
         display: flex;
-        flex-direction: column; /* Alinha em coluna na tela em pé, que vira lado a lado ao rotacionar */
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100dvh !important; /* Inverte Largura por Altura da tela */
-        height: 100vw !important; /* Inverte Altura por Largura da tela */
-        transform: translate(-50%, -50%) rotate(90deg); /* Centraliza e gira a visualização */
-        transform-origin: center center;
+        flex-direction: row;
+        position: fixed;
+        inset: 0;
+        width: 100vw !important;
+        height: 100dvh !important;
+        transform: none;
       }
 
-      /* Cada olho assume metade do container rotacionado */
       #stereo-view #scene-esquerda,
       #stereo-view #scene-direita {
         display: block !important;
         position: relative;
-        width: 100% !important;
-        height: 50% !important; /* Divide a altura do container (que virou a largura real após o rotate) */
+        width: 50% !important;
+        height: 100% !important;
         flex: 0 0 50% !important;
       }
 
-      /* Ajusta os menus para também acompanharem a rotação e não sumirem da tela */
       .viewer-tools {
-        top: 20px;
-        left: 20px;
-        transform: rotate(90deg);
-        transform-origin: top left;
+        top: 12px;
+        left: 12px;
         gap: 5px;
       }
 
       .viewer-tools a,
-      .viewer-tools span {
+      .viewer-tools button {
         padding: 8px 10px;
         font-size: 11px;
       }
 
       .vr-instructions {
-        bottom: 20px;
-        left: auto;
-        right: 20px;
-        transform: rotate(90deg);
-        transform-origin: bottom right;
+        bottom: 12px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
         padding: 9px;
         font-size: 11px;
       }
@@ -159,11 +154,11 @@
 
   <nav class="viewer-tools" aria-label="Virtual tour controls">
     <a href="index.html#visita">← Voltar ao Lab 4.0</a>
-    <span>Coloque o celular no óculos VR</span>
+    <button id="vr-mode" type="button">Ativar modo VR</button>
   </nav>
 
   <div class="vr-instructions">
-    Use os óculos VR para explorar o laboratório.
+    Toque em “Ativar modo VR”; se a tela não girar, vire o celular na horizontal.
   </div>
 
   <main id="stereo-view">
@@ -175,7 +170,7 @@
         src="https://kuula.co/share/LCHdQ/collection/7dcCJ?logo=1&amp;info=1&amp;fs=1&amp;vr=1&amp;thumbs=1"
         title="Visita virtual 360° do Lab 4.0 - tela esquerda"
         allow="fullscreen; gyroscope; accelerometer; magnetometer; xr-spatial-tracking"
-        allowfullscreen>
+        >
       </iframe>
     </section>
 
@@ -186,11 +181,63 @@
         src="https://kuula.co/share/LCHdQ/collection/7dcCJ?logo=1&amp;info=1&amp;fs=1&amp;vr=1&amp;thumbs=1"
         title="Visita virtual 360° do Lab 4.0 - tela direita"
         allow="fullscreen; gyroscope; accelerometer; magnetometer; xr-spatial-tracking"
-        allowfullscreen>
+        >
       </iframe>
     </section>
 
   </main>
+
+  <script>
+    const vrModeButton = document.getElementById('vr-mode');
+    const vrInstructions = document.querySelector('.vr-instructions');
+
+    vrModeButton.addEventListener('click', async () => {
+      const landscapeQuery = window.matchMedia('(orientation: landscape)');
+      let motionPermissionRequest = Promise.resolve('granted');
+
+      if (typeof DeviceOrientationEvent !== 'undefined'
+        && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        try {
+          motionPermissionRequest = DeviceOrientationEvent.requestPermission();
+        } catch {
+          motionPermissionRequest = Promise.resolve('denied');
+        }
+      }
+
+      let fullscreenRequest = Promise.resolve();
+      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+        try {
+          fullscreenRequest = document.documentElement.requestFullscreen();
+        } catch {
+          fullscreenRequest = Promise.resolve();
+        }
+      }
+
+      let motionPermission = 'denied';
+      try {
+        motionPermission = await motionPermissionRequest;
+      } catch {
+        motionPermission = 'denied';
+      }
+
+      try {
+        await fullscreenRequest;
+        if (!landscapeQuery.matches && screen.orientation?.lock) {
+          await screen.orientation.lock('landscape');
+        }
+      } catch {
+      }
+
+      const isLandscape = landscapeQuery.matches;
+      vrInstructions.textContent = isLandscape
+        ? motionPermission === 'granted'
+          ? 'Modo horizontal ativo. Coloque o celular nos óculos VR.'
+          : 'Permita o acesso aos sensores para usar o movimento no VR.'
+        : motionPermission === 'granted'
+          ? 'Gire o celular na horizontal e coloque-o nos óculos VR.'
+          : 'Permita os sensores e gire o celular na horizontal.';
+    });
+  </script>
 
 </body>
 </html>
