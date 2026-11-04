@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,19 +10,18 @@
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
   <script>
-    // Sincroniza a orientação das duas câmeras.
     AFRAME.registerComponent('sync-camera', {
       schema: {
         source: { type: 'selector' }
       },
 
       tick: function () {
-        const cameraOriginal = this.data.source;
+        const sourceCamera = this.data.source;
 
-        if (!cameraOriginal) return;
+        if (!sourceCamera) return;
 
         this.el.object3D.quaternion.copy(
-          cameraOriginal.object3D.quaternion
+          sourceCamera.object3D.quaternion
         );
       }
     });
@@ -38,11 +38,10 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
       background: #000;
+      font-family: Arial, sans-serif;
     }
 
-    /* ÁREA PRINCIPAL */
     #stereo-view {
       display: flex;
       width: 100%;
@@ -50,17 +49,17 @@
       overflow: hidden;
     }
 
-    /* CENAS DO A-FRAME */
-    #stereo-view a-scene {
+    #scene-esquerda,
+    #scene-direita {
       position: relative;
-      display: block;
-      height: 100%;
       margin: 0;
       padding: 0;
+      height: 100%;
     }
 
-    /* VISUALIZAÇÃO NORMAL NO COMPUTADOR */
+    /* Computer: one panoramic view */
     #scene-esquerda {
+      display: block;
       width: 100%;
       flex: 0 0 100%;
     }
@@ -69,7 +68,7 @@
       display: none;
     }
 
-    /* MENU SUPERIOR */
+    /* Top controls */
     .viewer-tools {
       position: fixed;
       z-index: 100;
@@ -77,14 +76,13 @@
       left: 16px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
     }
 
     .viewer-tools a,
     .viewer-tools span {
-      display: block;
       padding: 11px 14px;
-      color: white;
+      color: #fff;
       background: rgba(0, 35, 65, 0.90);
       font-size: 14px;
       text-decoration: none;
@@ -95,7 +93,7 @@
       background: #00579d;
     }
 
-    /* INSTRUÇÕES */
+    /* Instructions */
     .vr-instructions {
       position: fixed;
       z-index: 100;
@@ -105,16 +103,15 @@
       width: max-content;
       max-width: 90%;
       padding: 12px 18px;
-      color: white;
+      color: #fff;
       background: rgba(0, 35, 65, 0.88);
       border-radius: 5px;
       font-size: 13px;
       text-align: center;
     }
 
-    /* TELA DIVIDIDA PARA ÓCULOS VR */
+    /* Mobile: two equal panoramic views */
     @media screen and (max-width: 768px) {
-
       html, body {
         width: 100%;
         height: 100%;
@@ -165,21 +162,18 @@
 
 <body>
 
-  <!-- MENU -->
-  <nav class="viewer-tools" aria-label="Controles da visita virtual">
+  <nav class="viewer-tools" aria-label="Virtual tour controls">
     <a href="index.html#visita">← Voltar ao Lab 4.0</a>
-    <span>Movimente o celular para olhar ao redor</span>
+    <span>Arraste ou movimente o celular para olhar ao redor</span>
   </nav>
 
-  <!-- INSTRUÇÕES -->
   <div class="vr-instructions">
-    Coloque o celular nos óculos VR e explore o laboratório.
+    Coloque o celular nos óculos VR para explorar o laboratório.
   </div>
 
-  <!-- VISUALIZAÇÃO 360° -->
-  <div id="stereo-view">
+  <main id="stereo-view">
 
-    <!-- OLHO ESQUERDO -->
+    <!-- LEFT EYE -->
     <a-scene
       id="scene-esquerda"
       embedded
@@ -187,7 +181,6 @@
       device-orientation-permission-ui="enabled: true"
       renderer="colorManagement: true"
     >
-
       <a-assets>
         <img id="panorama-esquerdo" src="panorama.jpeg">
       </a-assets>
@@ -203,17 +196,15 @@
         position="0 1.6 0"
         look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true"
       ></a-entity>
-
     </a-scene>
 
-    <!-- OLHO DIREITO -->
+    <!-- RIGHT EYE -->
     <a-scene
       id="scene-direita"
       embedded
       vr-mode-ui="enabled: false"
       renderer="colorManagement: true"
     >
-
       <a-assets>
         <img id="panorama-direito" src="panorama.jpeg">
       </a-assets>
@@ -228,10 +219,9 @@
         position="0 1.6 0"
         sync-camera="source: #camera-esquerda"
       ></a-entity>
-
     </a-scene>
 
-  </div>
+  </main>
 
 </body>
 </html>
