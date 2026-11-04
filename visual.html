@@ -1,15 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual de 360 graus.">
+  <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual interativa de 360 graus.">
   <title>Visita 360° — Lab 4.0 SENAI</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
   <script>
-    // Mantém as duas imagens com a mesma orientação.
+    // Sincroniza a direção das duas câmeras.
     AFRAME.registerComponent('sync-camera', {
       schema: {
         source: { type: 'selector' }
@@ -17,6 +18,7 @@
 
       tick: function () {
         const source = this.data.source;
+
         if (!source) return;
 
         this.el.object3D.quaternion.copy(
@@ -35,31 +37,37 @@
       width: 100%;
       height: 100%;
       margin: 0;
+      padding: 0;
       overflow: hidden;
       font-family: Arial, sans-serif;
       background: #000;
     }
 
+    /* ÁREA DAS DUAS IMAGENS */
     #stereo-view {
       display: flex;
       width: 100%;
       height: 100%;
+      overflow: hidden;
     }
 
-    a-scene {
+    /* CENA NORMAL */
+    #scene-esquerda {
       display: block;
       position: relative;
       width: 100%;
       height: 100%;
     }
 
+    /* SEGUNDA CENA */
     #scene-direita {
       display: none;
     }
 
+    /* CONTROLES */
     .viewer-tools {
       position: fixed;
-      z-index: 10;
+      z-index: 100;
       top: 16px;
       left: 16px;
       display: flex;
@@ -69,27 +77,29 @@
 
     .viewer-tools a,
     .viewer-tools span {
+      display: block;
       padding: 11px 14px;
       color: white;
-      background: rgba(0, 35, 65, 0.88);
+      background: rgba(0, 35, 65, 0.90);
       font-size: 14px;
       text-decoration: none;
-      border-radius: 4px;
+      border-radius: 5px;
     }
 
     .viewer-tools a:hover {
       background: #00579d;
     }
 
+    /* INSTRUÇÕES */
     .vr-instructions {
       position: fixed;
-      z-index: 10;
+      z-index: 100;
       bottom: 18px;
       left: 50%;
       transform: translateX(-50%);
       padding: 12px 18px;
       color: white;
-      background: rgba(0, 35, 65, 0.85);
+      background: rgba(0, 35, 65, 0.88);
       border-radius: 5px;
       font-size: 13px;
       text-align: center;
@@ -97,16 +107,24 @@
       max-width: 90%;
     }
 
-    @media (max-width: 768px) {
+    /* VISUALIZAÇÃO DIVIDIDA NO CELULAR */
+    @media screen and (max-width: 768px) {
+
       #stereo-view {
         display: flex;
         flex-direction: row;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
       }
 
       #scene-esquerda,
       #scene-direita {
         display: block;
+        position: relative;
         width: 50%;
+        min-width: 50%;
+        max-width: 50%;
         height: 100%;
         flex: 0 0 50%;
       }
@@ -119,14 +137,16 @@
 
       .viewer-tools a,
       .viewer-tools span {
-        padding: 7px;
+        padding: 7px 9px;
         font-size: 10px;
       }
 
       .vr-instructions {
         bottom: 8px;
-        font-size: 10px;
-        padding: 7px;
+        width: 90%;
+        max-width: 90%;
+        font-size: 11px;
+        padding: 9px;
       }
     }
   </style>
@@ -134,27 +154,34 @@
 
 <body>
 
+  <!-- MENU SUPERIOR -->
   <nav class="viewer-tools" aria-label="Controles da visita virtual">
     <a href="index.html#visita">← Voltar ao Lab 4.0</a>
-    <span>Movimente o celular para explorar</span>
+    <span>Movimente o celular para olhar ao redor</span>
   </nav>
 
+  <!-- INSTRUÇÕES -->
   <div class="vr-instructions">
-    Coloque o celular nos óculos VR para explorar o laboratório.
+    Coloque o celular nos óculos VR e explore o laboratório.
   </div>
 
+  <!-- VISUALIZAÇÃO PANORÂMICA -->
   <div id="stereo-view">
 
-    <!-- IMAGEM DO OLHO ESQUERDO -->
+    <!-- OLHO ESQUERDO -->
     <a-scene
       id="scene-esquerda"
       embedded
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: true"
-      renderer="colorManagement: true"
+      renderer="colorManagement: true; antialias: false"
     >
+
       <a-assets>
-        <img id="panorama-esquerdo" src="panorama.jpeg">
+        <img
+          id="panorama-esquerdo"
+          src="panorama.jpeg"
+        >
       </a-assets>
 
       <a-sky
@@ -168,17 +195,22 @@
         position="0 1.6 0"
         look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true"
       ></a-entity>
+
     </a-scene>
 
-    <!-- IMAGEM DO OLHO DIREITO -->
+    <!-- OLHO DIREITO -->
     <a-scene
       id="scene-direita"
       embedded
       vr-mode-ui="enabled: false"
-      renderer="colorManagement: true"
+      renderer="colorManagement: true; antialias: false"
     >
+
       <a-assets>
-        <img id="panorama-direito" src="panorama.jpeg">
+        <img
+          id="panorama-direito"
+          src="panorama.jpeg"
+        >
       </a-assets>
 
       <a-sky
@@ -191,6 +223,7 @@
         position="0 1.6 0"
         sync-camera="source: #camera-esquerda"
       ></a-entity>
+
     </a-scene>
 
   </div>
