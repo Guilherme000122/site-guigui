@@ -1,14 +1,30 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual interativa de 360 graus.">
+  <meta name="description" content="Explore o Lab 4.0 do SENAI em uma visita virtual de 360 graus.">
   <title>Visita 360° — Lab 4.0 SENAI</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <script>
+    // Mantém as duas imagens com a mesma orientação.
+    AFRAME.registerComponent('sync-camera', {
+      schema: {
+        source: { type: 'selector' }
+      },
+
+      tick: function () {
+        const source = this.data.source;
+        if (!source) return;
+
+        this.el.object3D.quaternion.copy(
+          source.object3D.quaternion
+        );
+      }
+    });
+  </script>
 
   <style>
     * {
@@ -21,11 +37,24 @@
       margin: 0;
       overflow: hidden;
       font-family: Arial, sans-serif;
+      background: #000;
+    }
+
+    #stereo-view {
+      display: flex;
+      width: 100%;
+      height: 100%;
     }
 
     a-scene {
+      display: block;
+      position: relative;
       width: 100%;
       height: 100%;
+    }
+
+    #scene-direita {
+      display: none;
     }
 
     .viewer-tools {
@@ -68,13 +97,36 @@
       max-width: 90%;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
+      #stereo-view {
+        display: flex;
+        flex-direction: row;
+      }
+
+      #scene-esquerda,
+      #scene-direita {
+        display: block;
+        width: 50%;
+        height: 100%;
+        flex: 0 0 50%;
+      }
+
       .viewer-tools {
-        top: 10px;
-        left: 10px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        top: 8px;
+        left: 8px;
+        gap: 5px;
+      }
+
+      .viewer-tools a,
+      .viewer-tools span {
+        padding: 7px;
+        font-size: 10px;
+      }
+
+      .vr-instructions {
+        bottom: 8px;
+        font-size: 10px;
+        padding: 7px;
       }
     }
   </style>
@@ -84,49 +136,64 @@
 
   <nav class="viewer-tools" aria-label="Controles da visita virtual">
     <a href="index.html#visita">← Voltar ao Lab 4.0</a>
-    <span>Arraste ou deslize para olhar ao redor</span>
+    <span>Movimente o celular para explorar</span>
   </nav>
 
-  <div class="vr-instructions" id="vr-instructions">
-    Para usar os óculos VR, pressione o botão de realidade virtual.
+  <div class="vr-instructions">
+    Coloque o celular nos óculos VR para explorar o laboratório.
   </div>
 
-  <a-scene
-    embedded
-    vr-mode-ui="enabled: true; enterVRButton: true"
-    device-orientation-permission-ui="enabled: true"
-    renderer="colorManagement: true"
-  >
+  <div id="stereo-view">
 
-    <a-assets>
-      <img id="panorama-lab" src="panorama.jpeg" crossorigin="anonymous">
-    </a-assets>
+    <!-- IMAGEM DO OLHO ESQUERDO -->
+    <a-scene
+      id="scene-esquerda"
+      embedded
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: true"
+      renderer="colorManagement: true"
+    >
+      <a-assets>
+        <img id="panorama-esquerdo" src="panorama.jpeg">
+      </a-assets>
 
-    <a-sky
-      src="#panorama-lab"
-      rotation="0 -90 0">
-    </a-sky>
+      <a-sky
+        src="#panorama-esquerdo"
+        rotation="0 -90 0">
+      </a-sky>
 
-    <a-entity
-      camera
-      position="0 1.6 0"
-      look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true"
-    ></a-entity>
+      <a-entity
+        id="camera-esquerda"
+        camera
+        position="0 1.6 0"
+        look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true"
+      ></a-entity>
+    </a-scene>
 
-  </a-scene>
+    <!-- IMAGEM DO OLHO DIREITO -->
+    <a-scene
+      id="scene-direita"
+      embedded
+      vr-mode-ui="enabled: false"
+      renderer="colorManagement: true"
+    >
+      <a-assets>
+        <img id="panorama-direito" src="panorama.jpeg">
+      </a-assets>
 
-  <script>
-    const scene = document.querySelector('a-scene');
-    const instructions = document.getElementById('vr-instructions');
+      <a-sky
+        src="#panorama-direito"
+        rotation="0 -90 0">
+      </a-sky>
 
-    scene.addEventListener('enter-vr', () => {
-      instructions.textContent = 'Modo VR ativado! Explore o laboratório movimentando a cabeça.';
-    });
+      <a-entity
+        camera
+        position="0 1.6 0"
+        sync-camera="source: #camera-esquerda"
+      ></a-entity>
+    </a-scene>
 
-    scene.addEventListener('exit-vr', () => {
-      instructions.textContent = 'Para usar os óculos VR, pressione o botão de realidade virtual.';
-    });
-  </script>
+  </div>
 
 </body>
 </html>
